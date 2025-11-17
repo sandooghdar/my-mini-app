@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تغییر اندازه و فشرده‌سازی تصویر</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Vazirmatn Font (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Default (Blue) Theme Variables (kept for potential future use or consistency, though switcher is removed) */
+        :root {
+            --theme-primary: #007bff;
+            --theme-primary-dark: #0056b3;
+            --theme-secondary: #6c757d;
+            --theme-background: #f4f7fa; /* Lighter background for Eitaa app feel */
+            --theme-card-bg: #ffffff;
+            --theme-text: #2c3e50;
+            --theme-text-light: #fff;
+            --theme-border: #ced4da;
+            --theme-upload-border: #a7c5ed;
+            --theme-upload-bg: #e8f0fe;
+            --theme-shadow-light: rgba(0, 0, 0, 0.08);
+            --theme-shadow-dark: rgba(0, 0, 0, 0.15);
+            --theme-success: #28a745;
+            --theme-success-dark: #218838;
+        }
+
+        /* Themed variables are kept but the switcher UI is removed, defaulting to 'default' */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%; /* Make body fill the viewport height */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--theme-background);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            color: var(--theme-text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            direction: rtl;
+            text-align: right;
+            line-height: 1.6;
+            padding: 20px 0; /* Add overall vertical padding to body content */
+        }
+
+        button, input, select, textarea {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        main {
+            width: 100%;
+            max-width: 500px; /* Constrain max width for mobile feel */
+            padding: 0 15px; /* Add padding to sides for content from screen edges */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--theme-text);
+            margin-bottom: 30px; /* Reduced margin */
+            font-weight: 700;
+            font-size: 1.8em; /* Reduced font size for mobile */
+            text-align: center;
+            padding: 0 10px; /* Ensure padding for smaller screens */
+        }
+
+        .card {
+            background-color: var(--theme-card-bg);
+            border-radius: 16px; /* Increased border-radius for softer look */
+            box-shadow: 0 6px 18px var(--theme-shadow-light); /* Softer shadow */
+            padding: 25px; /* Reduced padding slightly */
+            width: 100%;
+            text-align: right;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #eee;
+        }
+        .section:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: var(--theme-text);
+        }
+
+        .upload-box {
+            display: flex;
+            align-items: center;
+            border: 2px dashed var(--theme-upload-border);
+            border-radius: 12px; /* Increased border-radius */
+            padding: 15px 20px;
+            background-color: var(--theme-upload-bg);
+            cursor: pointer;
+            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.2s ease;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .upload-box:hover {
+            border-color: var(--theme-primary);
+            background-color: rgba(0, 123, 255, 0.05); /* Lighter hover effect */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+
+        .upload-box .icon-large {
+            font-size: 2.2em; /* Slightly smaller icon */
+            color: var(--theme-primary);
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+
+        .upload-box .arrows {
+            font-size: 1.3em; /* Slightly smaller arrows */
+            color: var(--theme-border);
+            margin-left: 15px;
+            font-weight: 300;
+            flex-shrink: 0;
+        }
+
+        .upload-box .file-path {
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            padding: 8px 0;
+            font-size: 0.95em; /* Slightly smaller font for input */
+            color: var(--theme-text);
+            outline: none;
+            min-width: 80px; /* Allow it to shrink more */
+            text-align: right;
+        }
+        .upload-box .file-path::placeholder {
+            color: var(--theme-secondary);
+            opacity: 0.7;
+        }
+
+        .upload-box .cloud-icon {
+            font-size: 1.8em; /* Slightly smaller cloud icon */
+            color: var(--theme-primary);
+            margin-right: 15px; /* Adjust margin */
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+
+        .browse-btn {
+            background-color: var(--theme-primary);
+            color: var(--theme-text-light);
+            padding: 10px 18px; /* Adjusted padding */
+            border: none; /* Ensure no extra border */
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2); /* Softer shadow */
+        }
+
+        .browse-btn:hover {
+            background-color: var(--theme-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--theme-text);
+            opacity: 0.8;
+            font-size: 0.95em; /* Slightly smaller label font */
+        }
+
+        .range-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .range-group label {
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            flex-grow: 1;
+            height: 8px;
+            background: var(--theme-upload-border);
+            border-radius: 5px;
+            outline: none;
+            transition: background 0.2s;
+            margin: 0 10px;
+            min-width: 100px;
+            max-width: 400px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px; /* Slightly larger thumb */
+            height: 22px; /* Slightly larger thumb */
+            border-radius: 50%;
+            background: var(--theme-primary);
+            cursor: pointer;
+            box-shadow: 0 0 5px var(--theme-shadow-light);
+            margin-top: -7px; /* Adjust margin to center thumb */
+            border: 3px solid var(--theme-card-bg); /* Thicker border */
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--theme-primary);
+            cursor: pointer;
+            box-shadow: 0 0 5px var(--theme-shadow-light);
+            border: 3px solid var(--theme-card-bg);
+        }
+
+        .range-value {
+            min-width: 60px;
+            text-align: center;
+            padding: 5px 10px;
+            background-color: var(--theme-upload-bg);
+            color: var(--theme-primary-dark);
+            border-radius: 5px;
+            font-weight: 600;
+            flex-shrink: 0;
+            font-size: 0.95em;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .input-group > div {
+            flex: 1;
+            min-width: 130px; /* Adjusted min-width for mobile */
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--theme-border);
+            border-radius: 8px; /* Increased border-radius */
+            font-size: 0.95rem; /* Slightly smaller font */
+            color: var(--theme-text);
+            background-color: var(--theme-card-bg);
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            text-align: right;
+            -moz-appearance: textfield;
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"]:focus {
+            border-color: var(--theme-primary);
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .output-format-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: flex-start;
+            margin-top: 15px;
+        }
+
+        .output-format-group input[type="radio"] {
+            display: none;
+        }
+
+        .output-format-group input[type="radio"] + label {
+            position: relative;
+            padding-right: 28px; /* Adjusted padding for larger touch target */
+            padding-left: 0;
+            cursor: pointer;
+            font-weight: 400;
+            color: var(--theme-text);
+            white-space: nowrap;
+        }
+
+        .output-format-group input[type="radio"] + label::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            left: auto;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px; /* Larger radio button */
+            height: 18px; /* Larger radio button */
+            border: 2px solid var(--theme-border);
+            border-radius: 50%;
+            background-color: var(--theme-card-bg);
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .output-format-group input[type="radio"]:checked + label::before {
+            border-color: var(--theme-primary);
+        }
+
+        .output-format-group input[type="radio"] + label::after {
+            content: '';
+            position: absolute;
+            right: 5px; /* Adjust position for larger radio button */
+            left: auto;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px; /* Larger inner dot */
+            height: 10px; /* Larger inner dot */
+            border-radius: 50%;
+            background-color: var(--theme-primary);
+            opacity: 0;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+        }
+
+        .output-format-group input[type="radio"]:checked + label::after {
+            opacity: 1;
+        }
+
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 25px;
+            background-color: var(--theme-success);
+            color: var(--theme-text-light);
+            border: none;
+            border-radius: 12px; /* Increased border-radius */
+            font-size: 1.1em; /* Slightly smaller font */
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .download-btn:hover {
+            background-color: var(--theme-success-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.5);
+        }
+
+        .download-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .image-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 25px; /* Adjusted margin */
+        }
+        .image-card {
+            background-color: var(--theme-upload-bg);
+            border: 1px solid var(--theme-border);
+            border-radius: 12px; /* Increased border-radius */
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px var(--theme-shadow-light);
+        }
+        .image-card h3 {
+            margin-top: 0;
+            color: var(--theme-text);
+            font-weight: 500;
+            font-size: 1.1em; /* Adjusted font size */
+        }
+        .image-card img {
+            max-width: 100%;
+            height: auto;
+            max-height: 250px; /* Reduced max height for mobile */
+            border-radius: 8px;
+            margin-bottom: 15px;
+            object-fit: contain;
+            border: 1px solid var(--theme-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .image-card p {
+            margin: 5px 0;
+            font-size: 0.85rem; /* Slightly smaller font */
+            color: var(--theme-secondary);
+        }
+        .download-output-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: var(--theme-primary);
+            color: var(--theme-text-light);
+            text-decoration: none;
+            border-radius: 8px; /* Increased border-radius */
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 2px 10px rgba(0, 123, 255, 0.2);
+        }
+        .download-output-link:hover {
+            background-color: var(--theme-primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+        .hidden {
+            display: none !important;
+        }
+        canvas {
+            display: none;
+        }
+
+        /* Responsive adjustments specific for mobile Eitaa environment */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px 0; /* Slightly less vertical padding on smaller screens */
+            }
+            main {
+                max-width: 100%;
+                padding: 0 15px;
+            }
+            h1 {
+                font-size: 1.6em; /* Adjust for smaller screens */
+                margin-bottom: 25px;
+            }
+            .card {
+                padding: 20px; /* Ensure sufficient padding on smaller screens */
+            }
+            .upload-box {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 15px;
+            }
+            .upload-box .icon-large,
+            .upload-box .arrows,
+            .upload-box .cloud-icon {
+                margin: 0 0 10px 0;
+            }
+            .upload-box .file-path {
+                margin: 0 0 10px 0;
+                text-align: center;
+                width: 100%;
+            }
+            .upload-box .browse-btn {
+                width: 100%;
+            }
+
+            .range-group,
+            .input-group,
+            .output-format-group {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                gap: 10px; /* Smaller gap for mobile */
+            }
+            .range-group label,
+            .input-group > div > label {
+                margin-bottom: 5px;
+                margin-top: 10px;
+            }
+            input[type="range"] {
+                width: 100%;
+                margin: 0;
+                max-width: none;
+            }
+            .range-value {
+                width: 100%;
+                margin-top: 5px;
+            }
+            .input-group > div {
+                width: 100%;
+                min-width: unset;
+            }
+            .output-format-group {
+                gap: 15px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.4em;
+                margin-bottom: 20px;
+            }
+            .section-title {
+                font-size: 1em;
+            }
+            .upload-box .icon-large {
+                font-size: 2em;
+            }
+            .upload-box .arrows {
+                font-size: 1.1em;
+            }
+            .browse-btn {
+                padding: 8px 15px;
+            }
+            .download-btn {
+                font-size: 1em;
+                padding: 12px 20px;
+            }
+            .image-card img {
+                max-height: 200px; /* Further reduce max height for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>تغییر اندازه و فشرده‌سازی تصاویر شما</h1>
+
+        <div class="card">
+            <div class="section upload-section">
+                <div class="section-title">بارگذاری تصویر</div>
+                <div class="upload-box" onclick="document.getElementById('imageInput').click()">
+                    <i class="fas fa-image icon-large"></i>
+                    <span class="arrows">&gt;&gt;</span>
+                    <input type="text" id="file-name-display" placeholder="هیچ فایلی انتخاب نشده" readonly class="file-path">
+                    <i class="fas fa-cloud-upload-alt cloud-icon"></i>
+                    <span class="browse-btn">انتخاب فایل</span>
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                </div>
+            </div>
+
+            <div class="section resize-section">
+                <div class="section-title">تغییر اندازه</div>
+                <div class="range-group">
+                    <label for="resize-slider">مقیاس:</label>
+                    <input type="range" id="resize-slider" min="10" max="200" value="100">
+                    <span id="resize-percent-display" class="range-value">100%</span>
+                </div>
+                <div class="input-group">
+                    <div>
+                        <label for="width-input-px">عرض (پیکسل):</label>
+                        <input type="number" id="width-input-px" min="1" value="">
+                    </div>
+                    <div>
+                        <label for="height-input-px">ارتفاع (پیکسل):</label>
+                        <input type="number" id="height-input-px" min="1" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section compression-section">
+                <div class="section-title">کیفیت فشرده‌سازی</div>
+                <div class="range-group">
+                    <input type="range" id="quality-slider" min="0" max="100" value="80">
+                    <span id="quality-percent-display" class="range-value">80%</span>
+                </div>
+            </div>
+
+            <div class="section output-format-section">
+                <div class="section-title">فرمت خروجی</div>
+                <div class="output-format-group">
+                    <input type="radio" id="output-jpg" name="output-format" value="jpg" checked>
+                    <label for="output-jpg">JPG</label>
+
+                    <input type="radio" id="output-png" name="output-format" value="png">
+                    <label for="output-png">PNG</label>
+
+                    <input type="radio" id="output-webp" name="output-format" value="webp">
+                    <label for="output-webp">WebP</label>
+
+                    <input type="radio" id="output-avif" name="output-format" value="avif">
+                    <label for="output-avif">AVIF</label>
+                    
+                    <input type="radio" id="output-gif" name="output-format" value="gif">
+                    <label for="output-gif">GIF</label>
+
+                    <input type="radio" id="output-bmp" name="output-format" value="bmp">
+                    <label for="output-bmp">BMP</label>
+                </div>
+            </div>
+
+            <button id="download-process-btn" class="download-btn" disabled>دانلود و فشرده‌سازی</button>
+
+            <div class="section image-preview hidden" id="outputSection">
+                <h2 class="section-title">پیش‌نمایش تصاویر</h2>
+                <div class="image-card">
+                    <h3>تصویر اصلی</h3>
+                    <img id="originalImageDisplay" alt="تصویر اصلی" class="hidden">
+                    <p id="originalInfo"></p>
+                </div>
+                <div class="image-card">
+                    <h3>تصویر پردازش شده</h3>
+                    <img id="outputImageDisplay" alt="تصویر فشرده شده" class="hidden">
+                    <p id="outputInfo" class="hidden"></p>
+                    <a id="downloadLink" class="download-output-link hidden" download>دانلود تصویر</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <canvas id="imageCanvas"></canvas>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const imageInput = document.getElementById('imageInput');
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const resizeSlider = document.getElementById('resize-slider');
+            const widthInputPx = document.getElementById('width-input-px');
+            const heightInputPx = document.getElementById('height-input-px');
+            const resizePercentDisplay = document.getElementById('resize-percent-display');
+            const qualitySlider = document.getElementById('quality-slider');
+            const qualityPercentDisplay = document.getElementById('quality-percent-display');
+            const downloadProcessBtn = document.getElementById('download-process-btn');
+            const originalImageDisplay = document.getElementById('originalImageDisplay');
+            const outputImageDisplay = document.getElementById('outputImageDisplay');
+            const originalInfo = document.getElementById('originalInfo');
+            const outputInfo = document.getElementById('outputInfo');
+            const downloadLink = document.getElementById('downloadLink');
+            const outputSection = document.getElementById('outputSection');
+            const imageCanvas = document.getElementById('imageCanvas');
+            const ctx = imageCanvas.getContext('2d');
+
+            let originalImage = null;
+            let originalWidth = 0;
+            let originalHeight = 0;
+            let originalFileName = '';
+            let originalFileSize = 0;
+            let aspectRatio = 0;
+
+            // Helper to format file size
+            function formatBytes(bytes, decimals = 2) {
+                if (bytes === 0) return '0 بایت';
+                const k = 1024;
+                const dm = decimals < 0 ? 0 : decimals;
+                const sizes = ['بایت', 'کیلوبایت', 'مگابایت', 'گیگابایت', 'ترابایت'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+            }
+
+            function resetUI() {
+                originalImage = null;
+                originalWidth = 0;
+                originalHeight = 0;
+                originalFileName = '';
+                originalFileSize = 0;
+                aspectRatio = 0;
+
+                fileNameDisplay.value = 'هیچ فایلی انتخاب نشده';
+                resizeSlider.value = 100;
+                resizePercentDisplay.textContent = '100%';
+                widthInputPx.value = '';
+                heightInputPx.value = '';
+                qualitySlider.value = 80;
+                qualityPercentDisplay.textContent = '80%';
+                
+                originalImageDisplay.src = '';
+                originalImageDisplay.classList.add('hidden');
+                originalInfo.textContent = '';
+                
+                outputImageDisplay.src = '';
+                outputImageDisplay.classList.add('hidden');
+                outputInfo.textContent = '';
+                outputInfo.classList.add('hidden');
+                downloadLink.href = '#';
+                downloadLink.download = '';
+                downloadLink.classList.add('hidden');
+
+                outputSection.classList.add('hidden');
+                downloadProcessBtn.disabled = true;
+            }
+
+            // --- Event Listeners ---
+
+            imageInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) {
+                    resetUI();
+                    return;
+                }
+
+                originalFileName = file.name;
+                originalFileSize = file.size;
+                fileNameDisplay.value = originalFileName;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    originalImage = new Image();
+                    originalImage.onload = () => {
+                        originalImageDisplay.src = e.target.result;
+                        originalImageDisplay.classList.remove('hidden');
+
+                        originalWidth = originalImage.width;
+                        originalHeight = originalImage.height;
+                        aspectRatio = originalWidth / originalHeight;
+
+                        widthInputPx.value = originalWidth;
+                        heightInputPx.value = originalHeight;
+                        resizeSlider.value = 100; // Reset scale to 100%
+                        resizePercentDisplay.textContent = '100%';
+
+                        originalInfo.textContent = `ابعاد: ${originalWidth}x${originalHeight} پیکسل, حجم: ${formatBytes(originalFileSize)}`;
+                        outputSection.classList.remove('hidden');
+                        downloadProcessBtn.disabled = false;
+
+                        // Reset output specific elements
+                        outputImageDisplay.src = '';
+                        outputImageDisplay.classList.add('hidden');
+                        outputInfo.textContent = '';
+                        outputInfo.classList.add('hidden');
+                        downloadLink.href = '#';
+                        downloadLink.classList.add('hidden');
+                    };
+                    originalImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            resizeSlider.addEventListener('input', () => {
+                if (!originalImage) return;
+
+                const scale = resizeSlider.value;
+                resizePercentDisplay.textContent = `${scale}%`;
+
+                const newWidth = Math.round(originalWidth * (scale / 100));
+                const newHeight = Math.round(originalHeight * (scale / 100));
+                
+                if (newWidth > 0 && newHeight > 0) {
+                    widthInputPx.value = newWidth;
+                    heightInputPx.value = newHeight;
+                }
+            });
+
+            widthInputPx.addEventListener('input', () => {
+                if (!originalImage || !widthInputPx.value || isNaN(widthInputPx.value) || aspectRatio === 0) return;
+                
+                const newWidth = parseInt(widthInputPx.value);
+                if (newWidth > 0) {
+                    heightInputPx.value = Math.round(newWidth / aspectRatio);
+                    const scale = (newWidth / originalWidth) * 100;
+                    resizeSlider.value = Math.max(parseInt(resizeSlider.min), Math.min(parseInt(resizeSlider.max), Math.round(scale)));
+                    resizePercentDisplay.textContent = `${resizeSlider.value}%`;
+                }
+            });
+
+            heightInputPx.addEventListener('input', () => {
+                if (!originalImage || !heightInputPx.value || isNaN(heightInputPx.value) || aspectRatio === 0) return;
+                
+                const newHeight = parseInt(heightInputPx.value);
+                if (newHeight > 0) {
+                    widthInputPx.value = Math.round(newHeight * aspectRatio);
+                    const scale = (newHeight / originalHeight) * 100;
+                    resizeSlider.value = Math.max(parseInt(resizeSlider.min), Math.min(parseInt(resizeSlider.max), Math.round(scale)));
+                    resizePercentDisplay.textContent = `${resizeSlider.value}%`;
+                }
+            });
+
+            qualitySlider.addEventListener('input', () => {
+                qualityPercentDisplay.textContent = `${qualitySlider.value}%`;
+            });
+
+            downloadProcessBtn.addEventListener('click', () => {
+                if (!originalImage) {
+                    alert('لطفاً ابتدا یک تصویر انتخاب کنید.');
+                    return;
+                }
+
+                const quality = parseFloat(qualitySlider.value) / 100;
+                const newWidth = parseInt(widthInputPx.value);
+                const newHeight = parseInt(heightInputPx.value);
+                const outputFormat = document.querySelector('input[name="output-format"]:checked').value;
+                let mimeType = `image/${outputFormat}`;
+
+                if (outputFormat === 'jpg') {
+                    mimeType = 'image/jpeg';
+                }
+
+                if (isNaN(newWidth) || isNaN(newHeight) || newWidth <= 0 || newHeight <= 0) {
+                    alert('لطفاً ابعاد معتبر وارد کنید.');
+                    return;
+                }
+
+                imageCanvas.width = newWidth;
+                imageCanvas.height = newHeight;
+
+                ctx.clearRect(0, 0, newWidth, newHeight);
+                ctx.drawImage(originalImage, 0, 0, newWidth, newHeight);
+
+                // Use a try-catch for toBlob in case of unsupported format combinations by browser
+                try {
+                    imageCanvas.toBlob((blob) => {
+                        if (blob) {
+                            const blobUrl = URL.createObjectURL(blob);
+                            outputImageDisplay.src = blobUrl;
+                            outputImageDisplay.classList.remove('hidden');
+
+                            outputInfo.textContent = `ابعاد: ${newWidth}x${newHeight} پیکسل, حجم: ${formatBytes(blob.size)}`;
+                            outputInfo.classList.remove('hidden');
+
+                            downloadLink.href = blobUrl;
+                            
+                            // Clean filename for download, handle multiple dots and add new format/info
+                            const fileNameParts = originalFileName.split('.');
+                            const nameWithoutExtension = fileNameParts.slice(0, -1).join('.');
+                            const newFileName = `${nameWithoutExtension}_${newWidth}x${newHeight}_q${qualitySlider.value}.${outputFormat}`;
+                            downloadLink.download = newFileName;
+                            downloadLink.classList.remove('hidden');
+                        } else {
+                            alert('خطا در فشرده‌سازی تصویر. ممکن است فرمت خروجی پشتیبانی نشود یا تصویر خالی باشد.');
+                        }
+                    }, mimeType, quality);
+                } catch (e) {
+                    console.error("Error during toBlob:", e);
+                    alert('خطا در پردازش تصویر: ' + e.message + '. لطفاً فرمت خروجی دیگری را امتحان کنید.');
+                }
+            });
+
+            resetUI(); // Call on initial load
+        });
+    </script>
+</body>
+</html>
