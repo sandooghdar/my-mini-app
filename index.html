@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تغییر اندازه و فشرده‌سازی تصویر</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <!-- Vazirmatn Font (Google Fonts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+    
+    <script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
+    
     <style>
-        /* Default (Blue) Theme Variables (kept for potential future use or consistency, though switcher is removed) */
         :root {
             --theme-primary: #007bff;
             --theme-primary-dark: #0056b3;
             --theme-secondary: #6c757d;
-            --theme-background: #f4f7fa; /* Lighter background for Eitaa app feel */
+            --theme-background: #f4f7fa;
             --theme-card-bg: #ffffff;
             --theme-text: #2c3e50;
             --theme-text-light: #fff;
@@ -28,8 +29,6 @@
             --theme-success-dark: #218838;
         }
 
-        /* Themed variables are kept but the switcher UI is removed, defaulting to 'default' */
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -37,24 +36,22 @@
         }
 
         html, body {
-            height: 100%; /* Make body fill the viewport height */
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            height: 100%;
+            overflow-x: hidden;
         }
 
         body {
             font-family: 'Vazirmatn', sans-serif;
-            background-color: var(--theme-background);
+            background-color: var(--tg-theme-bg-color, var(--theme-background));
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            color: var(--theme-text);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            color: var(--tg-theme-text-color, var(--theme-text));
             direction: rtl;
             text-align: right;
             line-height: 1.6;
-            padding: 20px 0; /* Add overall vertical padding to body content */
+            padding: 20px 0;
         }
 
         button, input, select, textarea {
@@ -63,8 +60,8 @@
 
         main {
             width: 100%;
-            max-width: 500px; /* Constrain max width for mobile feel */
-            padding: 0 15px; /* Add padding to sides for content from screen edges */
+            max-width: 500px;
+            padding: 0 15px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -72,27 +69,101 @@
         }
 
         h1 {
-            color: var(--theme-text);
-            margin-bottom: 30px; /* Reduced margin */
+            color: var(--tg-theme-text-color, var(--theme-text));
+            margin-bottom: 30px;
             font-weight: 700;
-            font-size: 1.8em; /* Reduced font size for mobile */
+            font-size: 1.8em;
             text-align: center;
-            padding: 0 10px; /* Ensure padding for smaller screens */
+            padding: 0 10px;
+        }
+
+        /* جدید: استایل بنر انگیزشی */
+        .motivation-banner {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(40, 167, 69, 0.1));
+            border: 1px solid rgba(0, 123, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px var(--theme-shadow-light);
+            animation: fadeIn 0.5s ease-in-out;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 0.95em;
+            color: var(--theme-text);
+        }
+
+        .motivation-banner:hover {
+            background: linear-gradient(135deg, rgba(0, 123, 255, 0.15), rgba(40, 167, 69, 0.15));
+            transform: translateY(-1px);
+        }
+
+        .motivation-banner .quote-text {
+            flex-grow: 1;
+            margin-right: 10px;
+            /* تغییر: هایلایت مثل باکس آپلود – background آبی شفاف، border dashed، padding و shadow ملایم، فونت معمولی */
+            font-style: normal;
+            font-weight: 500;
+            background: var(--theme-upload-bg);
+            border: 1px dashed var(--theme-upload-border);
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px var(--theme-shadow-light);
+        }
+
+        .motivation-banner .read-more-btn {
+            background: var(--theme-primary);
+            color: var(--theme-text-light);
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .motivation-banner .read-more-btn:hover {
+            background: var(--theme-primary-dark);
+        }
+
+        .motivation-banner .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+
+        .motivation-banner .channel-info i {
+            color: var(--theme-success);
+            font-size: 1.1em;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .card {
-            background-color: var(--theme-card-bg);
-            border-radius: 16px; /* Increased border-radius for softer look */
-            box-shadow: 0 6px 18px var(--theme-shadow-light); /* Softer shadow */
-            padding: 25px; /* Reduced padding slightly */
+            background-color: var(--tg-theme-secondary-bg-color, var(--theme-card-bg));
+            border-radius: 16px;
+            box-shadow: 0 6px 18px var(--theme-shadow-light);
+            padding: 25px;
             width: 100%;
             text-align: right;
+            border: 1px solid var(--tg-theme-border-color, var(--theme-border));
         }
 
         .section {
             margin-bottom: 25px;
             padding-bottom: 20px;
-            border-bottom: 1px dashed #eee;
+            border-bottom: 1px dashed var(--tg-theme-hint-color, #eee);
         }
         .section:last-of-type {
             border-bottom: none;
@@ -104,37 +175,38 @@
             font-weight: 600;
             margin-bottom: 15px;
             font-size: 1.1em;
-            color: var(--theme-text);
+            color: var(--tg-theme-text-color, var(--theme-text));
         }
 
         .upload-box {
             display: flex;
             align-items: center;
-            border: 2px dashed var(--theme-upload-border);
-            border-radius: 12px; /* Increased border-radius */
+            border: 2px dashed var(--tg-theme-hint-color, var(--theme-upload-border));
+            border-radius: 12px;
             padding: 15px 20px;
-            background-color: var(--theme-upload-bg);
+            background-color: var(--tg-theme-secondary-bg-color, var(--theme-upload-bg));
             cursor: pointer;
             transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.2s ease;
             flex-wrap: wrap;
             gap: 10px;
+            min-height: 60px;
         }
 
         .upload-box:hover {
             border-color: var(--theme-primary);
-            background-color: rgba(0, 123, 255, 0.05); /* Lighter hover effect */
+            background-color: rgba(0, 123, 255, 0.05);
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
         }
 
         .upload-box .icon-large {
-            font-size: 2.2em; /* Slightly smaller icon */
+            font-size: 2.2em;
             color: var(--theme-primary);
             margin-left: 15px;
             flex-shrink: 0;
         }
 
         .upload-box .arrows {
-            font-size: 1.3em; /* Slightly smaller arrows */
+            font-size: 1.3em;
             color: var(--theme-border);
             margin-left: 15px;
             font-weight: 300;
@@ -146,37 +218,37 @@
             border: none;
             background: transparent;
             padding: 8px 0;
-            font-size: 0.95em; /* Slightly smaller font for input */
-            color: var(--theme-text);
+            font-size: 0.95em;
+            color: var(--tg-theme-text-color, var(--theme-text));
             outline: none;
-            min-width: 80px; /* Allow it to shrink more */
+            min-width: 80px;
             text-align: right;
         }
         .upload-box .file-path::placeholder {
-            color: var(--theme-secondary);
+            color: var(--tg-theme-hint-color, var(--theme-secondary));
             opacity: 0.7;
         }
 
         .upload-box .cloud-icon {
-            font-size: 1.8em; /* Slightly smaller cloud icon */
+            font-size: 1.8em;
             color: var(--theme-primary);
-            margin-right: 15px; /* Adjust margin */
+            margin-right: 15px;
             margin-left: 15px;
             flex-shrink: 0;
         }
 
         .browse-btn {
-            background-color: var(--theme-primary);
+            background-color: var(--tg-theme-button-color, var(--theme-primary));
             color: var(--theme-text-light);
-            padding: 10px 18px; /* Adjusted padding */
-            border: none; /* Ensure no extra border */
+            padding: 10px 18px;
+            border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 500;
             transition: background-color 0.2s ease, transform 0.1s ease;
             white-space: nowrap;
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2); /* Softer shadow */
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
         }
 
         .browse-btn:hover {
@@ -185,13 +257,28 @@
             box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
         }
 
+        /* استایل دکمه رندم: dashed مثل آپلود باکس */
+        .random-btn {
+            border: 2px dashed var(--theme-upload-border);
+            background: var(--theme-upload-bg);
+            color: var(--theme-primary);
+            box-shadow: none;
+        }
+
+        .random-btn:hover {
+            background: rgba(0, 123, 255, 0.05);
+            border-color: var(--theme-primary);
+            color: var(--theme-primary-dark);
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+        }
+
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: var(--theme-text);
+            color: var(--tg-theme-text-color, var(--theme-text));
             opacity: 0.8;
-            font-size: 0.95em; /* Slightly smaller label font */
+            font-size: 0.95em;
         }
 
         .range-group {
@@ -212,7 +299,7 @@
             width: 100%;
             flex-grow: 1;
             height: 8px;
-            background: var(--theme-upload-border);
+            background: var(--tg-theme-hint-color, var(--theme-upload-border));
             border-radius: 5px;
             outline: none;
             transition: background 0.2s;
@@ -224,14 +311,14 @@
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 22px; /* Slightly larger thumb */
-            height: 22px; /* Slightly larger thumb */
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: var(--theme-primary);
             cursor: pointer;
             box-shadow: 0 0 5px var(--theme-shadow-light);
-            margin-top: -7px; /* Adjust margin to center thumb */
-            border: 3px solid var(--theme-card-bg); /* Thicker border */
+            margin-top: -7px;
+            border: 3px solid var(--tg-theme-secondary-bg-color, var(--theme-card-bg));
         }
 
         input[type="range"]::-moz-range-thumb {
@@ -241,14 +328,14 @@
             background: var(--theme-primary);
             cursor: pointer;
             box-shadow: 0 0 5px var(--theme-shadow-light);
-            border: 3px solid var(--theme-card-bg);
+            border: 3px solid var(--tg-theme-secondary-bg-color, var(--theme-card-bg));
         }
 
         .range-value {
             min-width: 60px;
             text-align: center;
             padding: 5px 10px;
-            background-color: var(--theme-upload-bg);
+            background-color: var(--tg-theme-secondary-bg-color, var(--theme-upload-bg));
             color: var(--theme-primary-dark);
             border-radius: 5px;
             font-weight: 600;
@@ -265,16 +352,16 @@
         }
         .input-group > div {
             flex: 1;
-            min-width: 130px; /* Adjusted min-width for mobile */
+            min-width: 130px;
         }
-        input[type="number"] {
+        input[type="number"], input[type="url"] {
             width: 100%;
             padding: 10px 12px;
-            border: 1px solid var(--theme-border);
-            border-radius: 8px; /* Increased border-radius */
-            font-size: 0.95rem; /* Slightly smaller font */
-            color: var(--theme-text);
-            background-color: var(--theme-card-bg);
+            border: 1px solid var(--tg-theme-border-color, var(--theme-border));
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--tg-theme-text-color, var(--theme-text));
+            background-color: var(--tg-theme-secondary-bg-color, var(--theme-card-bg));
             box-sizing: border-box;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
             text-align: right;
@@ -285,10 +372,41 @@
             -webkit-appearance: none;
             margin: 0;
         }
-        input[type="number"]:focus {
+        input[type="number"]:focus, input[type="url"]:focus {
             border-color: var(--theme-primary);
             outline: 0;
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        select {
+            padding: 10px 12px;
+            border: 1px solid var(--theme-border);
+            border-radius: 8px;
+            background-color: var(--theme-card-bg);
+            color: var(--theme-text);
+            font-size: 0.95em;
+            direction: rtl;
+        }
+
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .preset-btn {
+            background: var(--tg-theme-button-color, #007bff);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .preset-btn:hover {
+            background: var(--theme-primary-dark);
         }
 
         .output-format-group {
@@ -305,11 +423,11 @@
 
         .output-format-group input[type="radio"] + label {
             position: relative;
-            padding-right: 28px; /* Adjusted padding for larger touch target */
+            padding-right: 28px;
             padding-left: 0;
             cursor: pointer;
             font-weight: 400;
-            color: var(--theme-text);
+            color: var(--tg-theme-text-color, var(--theme-text));
             white-space: nowrap;
         }
 
@@ -320,11 +438,11 @@
             left: auto;
             top: 50%;
             transform: translateY(-50%);
-            width: 18px; /* Larger radio button */
-            height: 18px; /* Larger radio button */
-            border: 2px solid var(--theme-border);
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--tg-theme-border-color, var(--theme-border));
             border-radius: 50%;
-            background-color: var(--theme-card-bg);
+            background-color: var(--tg-theme-secondary-bg-color, var(--theme-card-bg));
             transition: border-color 0.2s ease, background-color 0.2s ease;
         }
 
@@ -335,12 +453,12 @@
         .output-format-group input[type="radio"] + label::after {
             content: '';
             position: absolute;
-            right: 5px; /* Adjust position for larger radio button */
+            right: 5px;
             left: auto;
             top: 50%;
             transform: translateY(-50%);
-            width: 10px; /* Larger inner dot */
-            height: 10px; /* Larger inner dot */
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background-color: var(--theme-primary);
             opacity: 0;
@@ -355,11 +473,11 @@
             display: block;
             width: 100%;
             padding: 15px 25px;
-            background-color: var(--theme-success);
+            background-color: var(--tg-theme-button-color, var(--theme-success));
             color: var(--theme-text-light);
             border: none;
-            border-radius: 12px; /* Increased border-radius */
-            font-size: 1.1em; /* Slightly smaller font */
+            border-radius: 12px;
+            font-size: 1.1em;
             font-weight: 600;
             cursor: pointer;
             margin-top: 30px;
@@ -380,52 +498,58 @@
             box-shadow: none;
         }
 
-        .image-preview {
+        .preview-cards {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-top: 25px; /* Adjusted margin */
+            gap: 15px;
+            justify-content: space-around;
+            margin-top: 25px;
+            flex-wrap: wrap;
         }
-        .image-card {
-            background-color: var(--theme-upload-bg);
-            border: 1px solid var(--theme-border);
-            border-radius: 12px; /* Increased border-radius */
+        .preview-card {
+            flex: 1;
+            min-width: 150px;
+            background: var(--tg-theme-secondary-bg-color, var(--theme-upload-bg));
+            border: 1px solid var(--tg-theme-border-color, var(--theme-border));
+            border-radius: 12px;
             padding: 15px;
             text-align: center;
             box-shadow: 0 2px 10px var(--theme-shadow-light);
+            transition: opacity 0.5s ease;
         }
-        .image-card h3 {
+        .preview-card h3 {
             margin-top: 0;
-            color: var(--theme-text);
+            color: var(--tg-theme-text-color, var(--theme-text));
             font-weight: 500;
-            font-size: 1.1em; /* Adjusted font size */
+            font-size: 1.1em;
         }
-        .image-card img {
+        .preview-card img {
             max-width: 100%;
             height: auto;
-            max-height: 250px; /* Reduced max height for mobile */
+            max-height: 200px;
             border-radius: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             object-fit: contain;
-            border: 1px solid var(--theme-border);
+            border: 1px solid var(--tg-theme-border-color, var(--theme-border));
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .image-card p {
+        .preview-card p {
             margin: 5px 0;
-            font-size: 0.85rem; /* Slightly smaller font */
-            color: var(--theme-secondary);
+            font-size: 0.85rem;
+            color: var(--tg-theme-hint-color, var(--theme-secondary));
         }
         .download-output-link {
             display: inline-block;
             margin-top: 15px;
             padding: 10px 20px;
-            background-color: var(--theme-primary);
+            background-color: var(--tg-theme-button-color, var(--theme-primary));
             color: var(--theme-text-light);
             text-decoration: none;
-            border-radius: 8px; /* Increased border-radius */
+            border-radius: 8px;
             font-weight: 500;
             transition: background-color 0.3s ease, transform 0.1s ease;
             box-shadow: 0 2px 10px rgba(0, 123, 255, 0.2);
+            width: 100%;
+            text-align: center;
         }
         .download-output-link:hover {
             background-color: var(--theme-primary-dark);
@@ -439,98 +563,54 @@
             display: none;
         }
 
-        /* Responsive adjustments specific for mobile Eitaa environment */
-        @media (max-width: 768px) {
-            body {
-                padding: 15px 0; /* Slightly less vertical padding on smaller screens */
-            }
-            main {
-                max-width: 100%;
-                padding: 0 15px;
-            }
-            h1 {
-                font-size: 1.6em; /* Adjust for smaller screens */
-                margin-bottom: 25px;
-            }
-            .card {
-                padding: 20px; /* Ensure sufficient padding on smaller screens */
-            }
-            .upload-box {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                padding: 15px;
-            }
-            .upload-box .icon-large,
-            .upload-box .arrows,
-            .upload-box .cloud-icon {
-                margin: 0 0 10px 0;
-            }
-            .upload-box .file-path {
-                margin: 0 0 10px 0;
-                text-align: center;
-                width: 100%;
-            }
-            .upload-box .browse-btn {
-                width: 100%;
-            }
+        /* URL input style */
+        .url-input-group {
+            margin-top: 10px;
+        }
+        .url-input-group input[type="url"] {
+            direction: ltr; /* برای URL */
+        }
 
-            .range-group,
-            .input-group,
-            .output-format-group {
-                flex-direction: column;
-                align-items: flex-start;
-                width: 100%;
-                gap: 10px; /* Smaller gap for mobile */
-            }
-            .range-group label,
-            .input-group > div > label {
-                margin-bottom: 5px;
-                margin-top: 10px;
-            }
-            input[type="range"] {
-                width: 100%;
-                margin: 0;
-                max-width: none;
-            }
-            .range-value {
-                width: 100%;
-                margin-top: 5px;
-            }
-            .input-group > div {
-                width: 100%;
-                min-width: unset;
-            }
-            .output-format-group {
-                gap: 15px;
-                justify-content: center;
-            }
+        /* استایل گروه رندم */
+        .random-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 15px 0; }
+            main { max-width: 100%; padding: 0 15px; }
+            h1 { font-size: 1.6em; margin-bottom: 25px; }
+            .card { padding: 20px; }
+            .motivation-banner { flex-direction: column; text-align: center; gap: 10px; padding: 12px; }
+            .motivation-banner .read-more-btn { width: 100%; }
+            .upload-box { flex-direction: column; align-items: center; text-align: center; padding: 15px; }
+            .upload-box .icon-large, .upload-box .arrows, .upload-box .cloud-icon { margin: 0 0 10px 0; }
+            .upload-box .file-path { margin: 0 0 10px 0; text-align: center; width: 100%; }
+            .upload-box .browse-btn { width: 100%; }
+            .range-group, .input-group, .output-format-group { flex-direction: column; align-items: flex-start; width: 100%; gap: 10px; }
+            .range-group label, .input-group > div > label { margin-bottom: 5px; margin-top: 10px; }
+            input[type="range"] { width: 100%; margin: 0; max-width: none; }
+            .range-value { width: 100%; margin-top: 5px; }
+            .input-group > div { width: 100%; min-width: unset; }
+            .output-format-group { gap: 15px; justify-content: center; }
+            .preview-cards { flex-direction: column; }
+            .preset-buttons { flex-direction: column; align-items: center; }
+            .preset-btn { width: 100%; }
+            .random-group { flex-direction: column; }
+            .random-group select, .random-group button { width: 100%; }
         }
 
         @media (max-width: 480px) {
-            h1 {
-                font-size: 1.4em;
-                margin-bottom: 20px;
-            }
-            .section-title {
-                font-size: 1em;
-            }
-            .upload-box .icon-large {
-                font-size: 2em;
-            }
-            .upload-box .arrows {
-                font-size: 1.1em;
-            }
-            .browse-btn {
-                padding: 8px 15px;
-            }
-            .download-btn {
-                font-size: 1em;
-                padding: 12px 20px;
-            }
-            .image-card img {
-                max-height: 200px; /* Further reduce max height for smaller screens */
-            }
+            h1 { font-size: 1.4em; margin-bottom: 20px; }
+            .section-title { font-size: 1em; }
+            .upload-box .icon-large { font-size: 2em; }
+            .upload-box .arrows { font-size: 1.1em; }
+            .browse-btn { padding: 8px 15px; }
+            .download-btn { font-size: 1em; padding: 12px 20px; }
+            .motivation-banner { font-size: 0.9em; }
         }
     </style>
 </head>
@@ -539,15 +619,39 @@
         <h1>تغییر اندازه و فشرده‌سازی تصاویر شما</h1>
 
         <div class="card">
+            <!-- جدید: بنر انگیزشی -->
+            <div class="motivation-banner" id="motivationBanner">
+                <div class="quote-text" id="quoteText">در حال بارگذاری نقل قول...</div>
+                <button class="read-more-btn" id="readMoreBtn" onclick="openQuoteLink()">بیشتر بخوان</button>
+                <div class="channel-info">
+                    <i class="fas fa-heart"></i>
+                    <span>Yadbegirim@</span>
+                </div>
+            </div>
+
             <div class="section upload-section">
                 <div class="section-title">بارگذاری تصویر</div>
-                <div class="upload-box" onclick="document.getElementById('imageInput').click()">
+                <div class="upload-box" id="uploadBox" onclick="document.getElementById('imageInput').click()">
                     <i class="fas fa-image icon-large"></i>
                     <span class="arrows">&gt;&gt;</span>
                     <input type="text" id="file-name-display" placeholder="هیچ فایلی انتخاب نشده" readonly class="file-path">
                     <i class="fas fa-cloud-upload-alt cloud-icon"></i>
-                    <span class="browse-btn">انتخاب فایل</span>
+                    <span class="browse-btn">انتخاب از گالری/دوربین</span>
                     <input type="file" id="imageInput" accept="image/*" hidden>
+                </div>
+                <div class="url-input-group">
+                    <label for="imageUrl">یا لینک عکس وارد کنید:</label>
+                    <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg" style="width: 100%;">
+                    <button onclick="loadFromUrl()" class="browse-btn" style="width: 100%; margin-top: 5px;">لود از URL</button>
+                    <!-- جدید: گروه رندم با dropdown و دکمه dashed -->
+                    <div class="random-group">
+                        <select id="randomSizeSelect">
+                            <option value="200/200">کوچک ۲۰۰x۲۰۰</option>
+                            <option value="400/300" selected>متوسط ۴۰۰x۳۰۰</option>
+                            <option value="800/600">بزرگ ۸۰۰x۶۰۰</option>
+                        </select>
+                        <button id="randomPhotoBtn" class="browse-btn random-btn">عکس رندم تولید کن <i class="fas fa-random"></i></button>
+                    </div>
                 </div>
             </div>
 
@@ -568,6 +672,12 @@
                         <input type="number" id="height-input-px" min="1" value="">
                     </div>
                 </div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-width="1080" data-height="1080">اینستاگرام مربع</button>
+                    <button class="preset-btn" data-width="1200" data-height="630">توییتر/لینک</button>
+                    <button class="preset-btn" data-width="1920" data-height="1080">وب/ویدیو</button>
+                    <button class="preset-btn" data-width="800" data-height="800">استوری</button>
+                </div>
             </div>
 
             <div class="section compression-section">
@@ -583,19 +693,14 @@
                 <div class="output-format-group">
                     <input type="radio" id="output-jpg" name="output-format" value="jpg" checked>
                     <label for="output-jpg">JPG</label>
-
                     <input type="radio" id="output-png" name="output-format" value="png">
                     <label for="output-png">PNG</label>
-
                     <input type="radio" id="output-webp" name="output-format" value="webp">
                     <label for="output-webp">WebP</label>
-
                     <input type="radio" id="output-avif" name="output-format" value="avif">
                     <label for="output-avif">AVIF</label>
-                    
                     <input type="radio" id="output-gif" name="output-format" value="gif">
                     <label for="output-gif">GIF</label>
-
                     <input type="radio" id="output-bmp" name="output-format" value="bmp">
                     <label for="output-bmp">BMP</label>
                 </div>
@@ -603,17 +708,16 @@
 
             <button id="download-process-btn" class="download-btn" disabled>دانلود و فشرده‌سازی</button>
 
-            <div class="section image-preview hidden" id="outputSection">
-                <h2 class="section-title">پیش‌نمایش تصاویر</h2>
-                <div class="image-card">
-                    <h3>تصویر اصلی</h3>
-                    <img id="originalImageDisplay" alt="تصویر اصلی" class="hidden">
-                    <p id="originalInfo"></p>
+            <div class="preview-cards hidden" id="previewCards">
+                <div class="preview-card before-card">
+                    <h3>قبل</h3>
+                    <img id="originalCardImg" alt="تصویر اصلی" class="hidden">
+                    <p id="originalCardInfo"></p>
                 </div>
-                <div class="image-card">
-                    <h3>تصویر پردازش شده</h3>
-                    <img id="outputImageDisplay" alt="تصویر فشرده شده" class="hidden">
-                    <p id="outputInfo" class="hidden"></p>
+                <div class="preview-card after-card" style="opacity: 0;">
+                    <h3>بعد (<span id="savingsPercent">۰%</span> حجم کمتر!)</h3>
+                    <img id="outputCardImg" alt="تصویر فشرده شده" class="hidden">
+                    <p id="outputCardInfo"></p>
                     <a id="downloadLink" class="download-output-link hidden" download>دانلود تصویر</a>
                 </div>
             </div>
@@ -623,7 +727,305 @@
     <canvas id="imageCanvas"></canvas>
 
     <script>
+        let eitaaReady = false;
+        let user = {};
+        let currentQuote = null; // جدید: برای ذخیره نقل قول فعلی
+
+        function safeAlert(msg, callback) {
+            if (eitaaReady && window.Eitaa && window.Eitaa.WebApp && window.Eitaa.WebApp.version >= '1.0') {
+                window.Eitaa.WebApp.showAlert(msg, callback);
+            } else {
+                alert(msg);
+                if (callback) callback();
+            }
+        }
+
+        // جدید: تابع باز کردن لینک نقل قول
+        function openQuoteLink() {
+            if (currentQuote && currentQuote.link) {
+                if (eitaaReady && window.Eitaa.WebApp.version >= '1.0') {
+                    window.Eitaa.WebApp.openLink(currentQuote.link);
+                } else {
+                    window.open(currentQuote.link, '_blank');
+                }
+                console.log('Opened quote link:', currentQuote.link);
+            }
+        }
+
+        // جدید: لود نقل قول‌ها از JSON (local fallback یا GitHub)
+        async function loadMotivationQuote() {
+            const banner = document.getElementById('motivationBanner');
+            const quoteText = document.getElementById('quoteText');
+            const readMoreBtn = document.getElementById('readMoreBtn');
+
+            // نمونه آرایه local (برای تست – بعداً به GitHub تبدیل کن)
+            const fallbackQuotes = [
+                {
+                    text: "در سکوت باران، صدای قلب‌ت رو بشنو. هر قطره، داستانی از امید می‌گه.",
+                    link: "https://eitaa.com/yadbegirim/619" // جایگزین با لینک واقعی پست
+                },
+                {
+                    text: "زندگی مثل یه عکس خام: فشرده‌ش کن تا زیبایی‌ش بیشتر بشه. سادگی، کلید شادی‌ست.",
+                    link: "https://eitaa.com/yadbegirim/614"
+                },
+                {
+                    text: "هر نفس، یه فرصت تازه. مثل فشرده‌سازی فایل‌ها، بارهایت رو سبک کن و پرواز کن.",
+                    link: "https://eitaa.com/yadbegirim/611"
+                },
+                {
+                    text: "در پیچ و تاب روزها، لحظه‌های کوچک رو فشرده کن تا خاطره‌های بزرگ بسازی.",
+                    link: "https://eitaa.com/yadbegirim/609"
+                },
+                {
+                    text: "عشق، مثل یه تصویر HD: کیفیتش رو حفظ کن، حجمش رو کم کن – جا برای بیشتر جا داره.",
+                    link: "https://eitaa.com/yadbegirim/606"
+                }
+            ];
+
+            try {
+                // fetch از GitHub (جایگزین URL با repo خودت: https://raw.githubusercontent.com/yourusername/yourrepo/main/quotes.json)
+                // const response = await fetch('https://raw.githubusercontent.com/yourusername/yourrepo/main/quotes.json');
+                // const data = await response.json();
+                // const quotes = data.quotes || [];
+
+                // برای تست، از fallback استفاده کن (بعداً uncomment کن و URL بذار)
+                const quotes = fallbackQuotes;
+
+                if (quotes.length > 0) {
+                    // رندوم انتخاب
+                    currentQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                    quoteText.textContent = currentQuote.text;
+                    readMoreBtn.onclick = openQuoteLink; // ست کردن onclick
+                    banner.onclick = (e) => { if (e.target !== readMoreBtn) openQuoteLink(); }; // کلیک روی باکس
+                    console.log('Loaded quote:', currentQuote.text);
+                } else {
+                    throw new Error('No quotes found');
+                }
+            } catch (error) {
+                console.error('Error loading quotes:', error);
+                // fallback به آرایه local
+                currentQuote = fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
+                quoteText.textContent = currentQuote.text;
+                readMoreBtn.onclick = openQuoteLink;
+                banner.onclick = (e) => { if (e.target !== readMoreBtn) openQuoteLink(); };
+            }
+        }
+
+        if (window.Eitaa && window.Eitaa.WebApp) {
+            console.log('SDK ایتا لود شد. نسخه:', window.Eitaa.WebApp.version);
+            window.Eitaa.WebApp.ready();
+            window.Eitaa.WebApp.expand();
+            eitaaReady = true;
+            if (window.Eitaa.WebApp.version >= '1.0') {
+                window.Eitaa.WebApp.setHeaderColor('#007bff');
+                window.Eitaa.WebApp.enableClosingConfirmation();
+            }
+            window.Eitaa.WebApp.onEvent('themeChanged', function() {
+                document.body.style.backgroundColor = this.themeParams.bg_color;
+            });
+            safeAlert('به اپ فشرده‌سازی تصویر خوش آمدید!');
+
+            if (window.Eitaa.WebApp.initData) {
+                fetch('/validate-init-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ initData: window.Eitaa.WebApp.initData })
+                }).then(response => response.json()).then(data => {
+                    user = data.valid ? data.user : window.Eitaa.WebApp.initDataUnsafe.user;
+                    handleAuthSuccess(user);
+                }).catch(() => {
+                    user = window.Eitaa.WebApp.initDataUnsafe.user;
+                    handleAuthSuccess(user);
+                });
+            }
+        } else {
+            eitaaReady = false;
+            document.body.innerHTML += '<p style="color: orange;">بهترین تجربه در اپ ایتا است!</p>';
+        }
+
+        function handleAuthSuccess(u) {
+            user = u;
+            console.log('User ID:', user.id);
+            if (eitaaReady && window.Eitaa.WebApp.version >= '1.0') {
+                window.Eitaa.WebApp.MainButton.setText(`فشرده‌سازی برای ${user.first_name || 'کاربر'}`);
+                window.Eitaa.WebApp.MainButton.show();
+                window.Eitaa.WebApp.MainButton.onClick(() => {
+                    const btn = document.getElementById('download-process-btn');
+                    if (btn.disabled) {
+                        safeAlert('لطفاً ابتدا تصویر را انتخاب و تنظیمات را انجام دهید.');
+                        return;
+                    }
+                    if (window.Eitaa.WebApp.version >= '1.0') {
+                        window.Eitaa.WebApp.MainButton.showProgress(true);
+                        window.Eitaa.WebApp.HapticFeedback.impactOccurred('medium');
+                    }
+                    btn.click();
+                    setTimeout(() => {
+                        if (window.Eitaa.WebApp.version >= '1.0') {
+                            window.Eitaa.WebApp.MainButton.hideProgress();
+                            const link = document.getElementById('downloadLink');
+                            if (link.href && !link.classList.contains('hidden')) {
+                                window.Eitaa.WebApp.openLink(link.href);
+                            }
+                        }
+                        safeAlert('تصویر با موفقیت پردازش شد!');
+                    }, 1500);
+                });
+            }
+        }
+
+        // تغییر: loadFromUrl با تبدیل به dataURL برای fix رندوم بودن picsum
+        function loadFromUrl() {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => loadFromUrl());
+                return;
+            }
+
+            const imageUrlInput = document.getElementById('imageUrl');
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const url = imageUrlInput.value.trim();
+            if (!url) {
+                safeAlert('لینک عکس را وارد کنید.');
+                return;
+            }
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                safeAlert('لینک باید با http:// یا https:// شروع شود.');
+                return;
+            }
+            console.log('Loading from URL:', url);
+
+            // استخراج نام فایل از URL
+            let fileName = 'image_from_url.jpg';
+            try {
+                const urlObj = new URL(url);
+                const pathParts = urlObj.pathname.split('/');
+                const lastPart = pathParts[pathParts.length - 1];
+                if (lastPart && lastPart.includes('.')) {
+                    fileName = lastPart;
+                }
+            } catch (e) {
+                console.warn('Could not extract filename from URL:', e);
+            }
+
+            // استفاده از Image برای لود
+            const tempImg = new Image();
+            tempImg.crossOrigin = 'anonymous';
+            tempImg.onload = () => {
+                console.log('Temp image loaded from URL, dimensions:', tempImg.width, 'x', tempImg.height);
+
+                // تبدیل به dataURL برای cache ثابت
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCanvas.width = tempImg.width;
+                tempCanvas.height = tempImg.height;
+                tempCtx.drawImage(tempImg, 0, 0);
+                const dataURL = tempCanvas.toDataURL('image/png', 1.0); // PNG برای کیفیت بالا
+
+                // حالا originalImage رو با dataURL ست کن
+                const img = new Image();
+                img.onload = () => {
+                    console.log('Fixed image loaded from dataURL, dimensions:', img.width, 'x', img.height);
+
+                    // دسترسی به عناصر DOM
+                    const originalCardImg = document.getElementById('originalCardImg');
+                    const originalCardInfo = document.getElementById('originalCardInfo');
+                    const previewCards = document.getElementById('previewCards');
+                    const downloadProcessBtn = document.getElementById('download-process-btn');
+                    const widthInputPx = document.getElementById('width-input-px');
+                    const heightInputPx = document.getElementById('height-input-px');
+                    const resizeSlider = document.getElementById('resize-slider');
+                    const resizePercentDisplay = document.getElementById('resize-percent-display');
+
+                    // ست کردن متغیرهای global
+                    window.originalImage = img;
+                    window.originalWidth = img.width;
+                    window.originalHeight = img.height;
+                    window.originalFileName = fileName;
+                    window.originalFileSize = 0; // تخمینی
+                    window.aspectRatio = img.width / img.height;
+
+                    fileNameDisplay.value = fileName;
+
+                    // ست ابعاد
+                    widthInputPx.value = img.width;
+                    heightInputPx.value = img.height;
+                    resizeSlider.value = 100;
+                    resizePercentDisplay.textContent = '100%';
+
+                    // نمایش پیش‌نمایش با dataURL (ثابت)
+                    originalCardImg.src = dataURL;
+                    originalCardImg.classList.remove('hidden');
+                    originalCardInfo.textContent = `ابعاد: ${img.width}x${img.height} پیکسل, حجم: تخمینی (از URL)`;
+                    previewCards.classList.remove('hidden');
+                    downloadProcessBtn.disabled = false;
+
+                    // Reset output
+                    const outputCardImg = document.getElementById('outputCardImg');
+                    const outputCardInfo = document.getElementById('outputCardInfo');
+                    const downloadLink = document.getElementById('downloadLink');
+                    const savingsPercent = document.getElementById('savingsPercent');
+                    outputCardImg.src = '';
+                    outputCardImg.classList.add('hidden');
+                    outputCardInfo.textContent = '';
+                    downloadLink.href = '#';
+                    downloadLink.classList.add('hidden');
+                    savingsPercent.textContent = '۰%';
+                    document.querySelector('.after-card').style.opacity = '0';
+
+                    // آپدیت placeholder
+                    imageUrlInput.placeholder = 'لینک لود شد: ' + fileName;
+
+                    safeAlert('تصویر از URL لود شد!');
+                };
+                img.src = dataURL; // لود از dataURL
+            };
+            tempImg.onerror = (err) => {
+                console.error('Temp image load error from URL:', err);
+                safeAlert('خطا در لود تصویر از URL. لینک معتبر وارد کنید.');
+            };
+            tempImg.src = url + (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+        }
+
+        // جدید: تابع تولید عکس رندم
+        function generateRandomPhoto() {
+            const sizeSelect = document.getElementById('randomSizeSelect');
+            const dimensions = sizeSelect.value.split('/');
+            const width = dimensions[0];
+            const height = dimensions[1];
+            const randomSeed = Date.now();
+            const randomUrl = `https://picsum.photos/${width}/${height}?random=${randomSeed}`;
+            document.getElementById('imageUrl').value = randomUrl;
+
+            const btn = document.getElementById('randomPhotoBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال تولید...';
+            btn.disabled = true;
+
+            // spinner کوتاه 0.5 ثانیه
+            setTimeout(() => {
+                loadFromUrl();
+                // بعد از لود (تایمینگ تقریبی)
+                setTimeout(() => {
+                    if (!window.isRandomMode) {
+                        btn.innerHTML = 'رندم دیگه <i class="fas fa-random"></i>';
+                        window.isRandomMode = true;
+                        safeAlert('عکس رندم لود شد – حالا فشرده کن و تست بگیر!');
+                    } else {
+                        safeAlert('عکس جدید لود شد!');
+                    }
+                    btn.disabled = false;
+                }, 1000);
+            }, 500);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            // جدید: لود بنر بعد از DOM
+            loadMotivationQuote();
+
+            // جدید: متغیر حالت رندم
+            window.isRandomMode = false;
+            document.getElementById('randomPhotoBtn').addEventListener('click', generateRandomPhoto);
+
             const imageInput = document.getElementById('imageInput');
             const fileNameDisplay = document.getElementById('file-name-display');
             const resizeSlider = document.getElementById('resize-slider');
@@ -633,25 +1035,29 @@
             const qualitySlider = document.getElementById('quality-slider');
             const qualityPercentDisplay = document.getElementById('quality-percent-display');
             const downloadProcessBtn = document.getElementById('download-process-btn');
-            const originalImageDisplay = document.getElementById('originalImageDisplay');
-            const outputImageDisplay = document.getElementById('outputImageDisplay');
-            const originalInfo = document.getElementById('originalInfo');
-            const outputInfo = document.getElementById('outputInfo');
+            const previewCards = document.getElementById('previewCards');
+            const originalCardImg = document.getElementById('originalCardImg');
+            const outputCardImg = document.getElementById('outputCardImg');
+            const originalCardInfo = document.getElementById('originalCardInfo');
+            const outputCardInfo = document.getElementById('outputCardInfo');
             const downloadLink = document.getElementById('downloadLink');
-            const outputSection = document.getElementById('outputSection');
+            const savingsPercent = document.getElementById('savingsPercent');
             const imageCanvas = document.getElementById('imageCanvas');
             const ctx = imageCanvas.getContext('2d');
+            const uploadBox = document.getElementById('uploadBox');
+            const imageUrl = document.getElementById('imageUrl');
 
-            let originalImage = null;
+            // متغیرهای global برای دسترسی از loadFromUrl
+            window.originalImage = null;
             let originalWidth = 0;
             let originalHeight = 0;
             let originalFileName = '';
             let originalFileSize = 0;
             let aspectRatio = 0;
+            let currentBlobUrl = '';
 
-            // Helper to format file size
             function formatBytes(bytes, decimals = 2) {
-                if (bytes === 0) return '0 بایت';
+                if (bytes === 0) return 'تخمینی (از URL)';
                 const k = 1024;
                 const dm = decimals < 0 ? 0 : decimals;
                 const sizes = ['بایت', 'کیلوبایت', 'مگابایت', 'گیگابایت', 'ترابایت'];
@@ -660,14 +1066,17 @@
             }
 
             function resetUI() {
-                originalImage = null;
+                window.originalImage = null;
                 originalWidth = 0;
                 originalHeight = 0;
                 originalFileName = '';
                 originalFileSize = 0;
                 aspectRatio = 0;
+                window.isRandomMode = false; // ریست حالت رندم
 
                 fileNameDisplay.value = 'هیچ فایلی انتخاب نشده';
+                imageUrl.value = '';
+                imageUrl.placeholder = 'https://example.com/image.jpg';
                 resizeSlider.value = 100;
                 resizePercentDisplay.textContent = '100%';
                 widthInputPx.value = '';
@@ -675,114 +1084,156 @@
                 qualitySlider.value = 80;
                 qualityPercentDisplay.textContent = '80%';
                 
-                originalImageDisplay.src = '';
-                originalImageDisplay.classList.add('hidden');
-                originalInfo.textContent = '';
+                originalCardImg.src = '';
+                originalCardImg.classList.add('hidden');
+                originalCardInfo.textContent = '';
                 
-                outputImageDisplay.src = '';
-                outputImageDisplay.classList.add('hidden');
-                outputInfo.textContent = '';
-                outputInfo.classList.add('hidden');
+                outputCardImg.src = '';
+                outputCardImg.classList.add('hidden');
+                outputCardInfo.textContent = '';
                 downloadLink.href = '#';
                 downloadLink.download = '';
                 downloadLink.classList.add('hidden');
-
-                outputSection.classList.add('hidden');
-                downloadProcessBtn.disabled = true;
-            }
-
-            // --- Event Listeners ---
-
-            imageInput.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (!file) {
-                    resetUI();
-                    return;
+                savingsPercent.textContent = '۰%';
+                document.querySelector('.after-card').style.opacity = '0';
+                if (currentBlobUrl) {
+                    URL.revokeObjectURL(currentBlobUrl);
+                    currentBlobUrl = '';
                 }
 
+                previewCards.classList.add('hidden');
+                downloadProcessBtn.disabled = true;
+
+                // ریست دکمه رندم
+                const randomBtn = document.getElementById('randomPhotoBtn');
+                randomBtn.innerHTML = 'عکس رندم تولید کن <i class="fas fa-random"></i>';
+            }
+
+            // File select (از input یا URL)
+            imageInput.addEventListener('change', (event) => {
+                console.log('Input change triggered');
+                const file = event.target.files[0];
+                console.log('File from input:', file ? file.name : 'null');
+                if (!file) return;
+                handleFileSelect(file);
+            });
+
+            function handleFileSelect(file) {
+                console.log('handleFileSelect called with file:', file.name);
                 originalFileName = file.name;
                 originalFileSize = file.size;
                 fileNameDisplay.value = originalFileName;
 
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    originalImage = new Image();
-                    originalImage.onload = () => {
-                        originalImageDisplay.src = e.target.result;
-                        originalImageDisplay.classList.remove('hidden');
-
-                        originalWidth = originalImage.width;
-                        originalHeight = originalImage.height;
+                    console.log('Reader loaded successfully');
+                    window.originalImage = new Image();
+                    window.originalImage.onload = () => {
+                        console.log('Image loaded, dimensions:', window.originalImage.width, 'x', window.originalImage.height);
+                        originalWidth = window.originalImage.width;
+                        originalHeight = window.originalImage.height;
                         aspectRatio = originalWidth / originalHeight;
 
                         widthInputPx.value = originalWidth;
                         heightInputPx.value = originalHeight;
-                        resizeSlider.value = 100; // Reset scale to 100%
+                        resizeSlider.value = 100;
                         resizePercentDisplay.textContent = '100%';
 
-                        originalInfo.textContent = `ابعاد: ${originalWidth}x${originalHeight} پیکسل, حجم: ${formatBytes(originalFileSize)}`;
-                        outputSection.classList.remove('hidden');
+                        originalCardImg.src = e.target.result;
+                        originalCardImg.classList.remove('hidden');
+                        originalCardInfo.textContent = `ابعاد: ${originalWidth}x${originalHeight} پیکسل, حجم: ${formatBytes(originalFileSize)}`;
+                        previewCards.classList.remove('hidden');
                         downloadProcessBtn.disabled = false;
 
-                        // Reset output specific elements
-                        outputImageDisplay.src = '';
-                        outputImageDisplay.classList.add('hidden');
-                        outputInfo.textContent = '';
-                        outputInfo.classList.add('hidden');
+                        // Reset output
+                        outputCardImg.src = '';
+                        outputCardImg.classList.add('hidden');
+                        outputCardInfo.textContent = '';
                         downloadLink.href = '#';
                         downloadLink.classList.add('hidden');
+                        savingsPercent.textContent = '۰%';
+                        document.querySelector('.after-card').style.opacity = '0';
                     };
-                    originalImage.src = e.target.result;
+                    window.originalImage.onerror = (err) => {
+                        console.error('Image load error:', err);
+                        safeAlert('خطا در لود تصویر. فرمت پشتیبانی نمی‌شود.');
+                    };
+                    window.originalImage.src = e.target.result;
+                };
+                reader.onerror = (err) => {
+                    console.error('Reader error:', err);
+                    safeAlert('خطا در خواندن فایل.');
                 };
                 reader.readAsDataURL(file);
-            });
+            }
 
+            // Resize slider
             resizeSlider.addEventListener('input', () => {
-                if (!originalImage) return;
-
-                const scale = resizeSlider.value;
+                const scale = parseInt(resizeSlider.value);
                 resizePercentDisplay.textContent = `${scale}%`;
-
-                const newWidth = Math.round(originalWidth * (scale / 100));
-                const newHeight = Math.round(originalHeight * (scale / 100));
-                
-                if (newWidth > 0 && newHeight > 0) {
-                    widthInputPx.value = newWidth;
-                    heightInputPx.value = newHeight;
+                console.log('Resize slider changed to:', scale);
+                if (originalWidth > 0 && originalHeight > 0) {
+                    const newWidth = Math.round(originalWidth * (scale / 100));
+                    const newHeight = Math.round(originalHeight * (scale / 100));
+                    if (newWidth > 0 && newHeight > 0) {
+                        widthInputPx.value = newWidth;
+                        heightInputPx.value = newHeight;
+                    }
+                } else {
+                    widthInputPx.value = Math.round(800 * (scale / 100));
+                    heightInputPx.value = Math.round(600 * (scale / 100));
                 }
             });
 
+            // Width input
             widthInputPx.addEventListener('input', () => {
-                if (!originalImage || !widthInputPx.value || isNaN(widthInputPx.value) || aspectRatio === 0) return;
-                
                 const newWidth = parseInt(widthInputPx.value);
-                if (newWidth > 0) {
-                    heightInputPx.value = Math.round(newWidth / aspectRatio);
-                    const scale = (newWidth / originalWidth) * 100;
-                    resizeSlider.value = Math.max(parseInt(resizeSlider.min), Math.min(parseInt(resizeSlider.max), Math.round(scale)));
+                if (isNaN(newWidth) || newWidth <= 0 || aspectRatio === 0) return;
+                heightInputPx.value = Math.round(newWidth / aspectRatio);
+                const scale = (newWidth / originalWidth) * 100;
+                if (originalWidth > 0) {
+                    resizeSlider.value = Math.max(10, Math.min(200, Math.round(scale)));
                     resizePercentDisplay.textContent = `${resizeSlider.value}%`;
                 }
+                console.log('Width changed to:', newWidth);
             });
 
+            // Height input
             heightInputPx.addEventListener('input', () => {
-                if (!originalImage || !heightInputPx.value || isNaN(heightInputPx.value) || aspectRatio === 0) return;
-                
                 const newHeight = parseInt(heightInputPx.value);
-                if (newHeight > 0) {
-                    widthInputPx.value = Math.round(newHeight * aspectRatio);
-                    const scale = (newHeight / originalHeight) * 100;
-                    resizeSlider.value = Math.max(parseInt(resizeSlider.min), Math.min(parseInt(resizeSlider.max), Math.round(scale)));
+                if (isNaN(newHeight) || newHeight <= 0 || aspectRatio === 0) return;
+                widthInputPx.value = Math.round(newHeight * aspectRatio);
+                const scale = (newHeight / originalHeight) * 100;
+                if (originalHeight > 0) {
+                    resizeSlider.value = Math.max(10, Math.min(200, Math.round(scale)));
                     resizePercentDisplay.textContent = `${resizeSlider.value}%`;
                 }
+                console.log('Height changed to:', newHeight);
             });
 
+            // Quality slider
             qualitySlider.addEventListener('input', () => {
                 qualityPercentDisplay.textContent = `${qualitySlider.value}%`;
+                console.log('Quality changed to:', qualitySlider.value);
             });
 
+            // Preset buttons
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const w = parseInt(btn.dataset.width), h = parseInt(btn.dataset.height);
+                    widthInputPx.value = w;
+                    heightInputPx.value = h;
+                    widthInputPx.dispatchEvent(new Event('input'));
+                    console.log('Preset applied:', w, 'x', h);
+                    if (eitaaReady) window.Eitaa.WebApp.HapticFeedback.impactOccurred('light');
+                });
+            });
+
+            // Download button
             downloadProcessBtn.addEventListener('click', () => {
-                if (!originalImage) {
-                    alert('لطفاً ابتدا یک تصویر انتخاب کنید.');
+                console.log('Download clicked, originalImage exists?', !!window.originalImage);
+                if (!window.originalImage) {
+                    safeAlert('لطفاً ابتدا یک تصویر انتخاب کنید.');
                     return;
                 }
 
@@ -791,52 +1242,60 @@
                 const newHeight = parseInt(heightInputPx.value);
                 const outputFormat = document.querySelector('input[name="output-format"]:checked').value;
                 let mimeType = `image/${outputFormat}`;
-
-                if (outputFormat === 'jpg') {
-                    mimeType = 'image/jpeg';
-                }
+                if (outputFormat === 'jpg') mimeType = 'image/jpeg';
 
                 if (isNaN(newWidth) || isNaN(newHeight) || newWidth <= 0 || newHeight <= 0) {
-                    alert('لطفاً ابعاد معتبر وارد کنید.');
+                    safeAlert('لطفاً ابعاد معتبر وارد کنید.');
                     return;
                 }
+
+                console.log('Processing with dimensions:', newWidth, 'x', newHeight, 'quality:', quality);
+
+                if (eitaaReady) window.Eitaa.WebApp.HapticFeedback.impactOccurred('medium');
 
                 imageCanvas.width = newWidth;
                 imageCanvas.height = newHeight;
 
                 ctx.clearRect(0, 0, newWidth, newHeight);
-                ctx.drawImage(originalImage, 0, 0, newWidth, newHeight);
+                ctx.drawImage(window.originalImage, 0, 0, newWidth, newHeight);
 
-                // Use a try-catch for toBlob in case of unsupported format combinations by browser
                 try {
                     imageCanvas.toBlob((blob) => {
+                        console.log('Blob created, size:', blob.size);
                         if (blob) {
-                            const blobUrl = URL.createObjectURL(blob);
-                            outputImageDisplay.src = blobUrl;
-                            outputImageDisplay.classList.remove('hidden');
+                            currentBlobUrl = URL.createObjectURL(blob);
+                            outputCardImg.src = currentBlobUrl;
+                            outputCardImg.classList.remove('hidden');
 
-                            outputInfo.textContent = `ابعاد: ${newWidth}x${newHeight} پیکسل, حجم: ${formatBytes(blob.size)}`;
-                            outputInfo.classList.remove('hidden');
-
-                            downloadLink.href = blobUrl;
+                            outputCardInfo.textContent = `ابعاد: ${newWidth}x${newHeight} پیکسل, حجم: ${formatBytes(blob.size)}`;
                             
-                            // Clean filename for download, handle multiple dots and add new format/info
+                            // تغییر: برای URL، savings رو بر اساس تخمین محاسبه نکن
+                            let savings = 'نامشخص';
+                            if (originalFileSize > 0) {
+                                savings = ((originalFileSize - blob.size) / originalFileSize * 100).toFixed(1);
+                            }
+                            savingsPercent.textContent = `${savings}%`;
+                            document.querySelector('.after-card').style.opacity = '1';
+
+                            downloadLink.href = currentBlobUrl;
                             const fileNameParts = originalFileName.split('.');
                             const nameWithoutExtension = fileNameParts.slice(0, -1).join('.');
                             const newFileName = `${nameWithoutExtension}_${newWidth}x${newHeight}_q${qualitySlider.value}.${outputFormat}`;
                             downloadLink.download = newFileName;
                             downloadLink.classList.remove('hidden');
+                            
+                            safeAlert('پردازش کامل شد! روی لینک دانلود بزنید.');
                         } else {
-                            alert('خطا در فشرده‌سازی تصویر. ممکن است فرمت خروجی پشتیبانی نشود یا تصویر خالی باشد.');
+                            safeAlert('خطا در فشرده‌سازی تصویر. فرمت خروجی را تغییر دهید.');
                         }
                     }, mimeType, quality);
                 } catch (e) {
                     console.error("Error during toBlob:", e);
-                    alert('خطا در پردازش تصویر: ' + e.message + '. لطفاً فرمت خروجی دیگری را امتحان کنید.');
+                    safeAlert('خطا در پردازش: ' + e.message);
                 }
             });
 
-            resetUI(); // Call on initial load
+            resetUI();
         });
     </script>
 </body>
